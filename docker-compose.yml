@@ -1,0 +1,27 @@
+services:
+  frontend:
+    image: nextjs-app
+    build:
+      context: ./grad-front
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:7144
+    depends_on:
+      - backend
+
+  backend:
+    image: aspnet-backend
+    build:
+      context: .
+      dockerfile: AuthService/Dockerfile
+    ports:
+      - "7144:7144"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:7144
+    volumes:
+      - aspnet-data-protection-keys:/root/.aspnet/DataProtection-Keys
+volumes:
+  aspnet-data-protection-keys:
